@@ -10,16 +10,12 @@
 using namespace std;
 
 
-string game_start_intro = "Bla bla bla, Bloooooo\nTo view a list of commands type: list";
-
 
 
 int main(int argc, _TCHAR* argv[])
 {
 	Game g = Game();
 	string command;
-
-	cout << game_start_intro << endl;
 
 	vector<string> args = vector<string>();
 	while (true){
