@@ -7,9 +7,11 @@
 #include <string>
 #include <vector>
 
-using namespace std;
 
-
+using adventure_game::Game;
+using std::cout;
+using std::cin;
+using std::endl;
 
 
 int main(int argc, _TCHAR* argv[])
@@ -25,12 +27,11 @@ int main(int argc, _TCHAR* argv[])
 		for (size_t p = 0, q = 0; p != command.npos; p = q){
 			args.push_back(command.substr(p + (p != 0), (q = command.find(' ', p + 1)) - p - (p != 0)));
 		}
-		if (!g.lookup_and_call(args,&g)){
+		if (!g.lookup_and_call(args, &g)){
 			cout << "Unknown command: " << command << endl;
 		}
-		
+
 	}
 
 	return 0;
 }
-
