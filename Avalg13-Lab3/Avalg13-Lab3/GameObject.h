@@ -8,6 +8,8 @@ namespace adventure_game {
 	public:
 		GameObject();
 		~GameObject();
+	private:
+
 	};
 
 }

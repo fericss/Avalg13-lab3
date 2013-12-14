@@ -11,15 +11,32 @@ namespace adventure_game {
 
 	class GameEnviroment
 	{
-	public:
-		GameEnviroment();
-		~GameEnviroment();
 	private:
 		string					type;
 		string					description;
 		vector<GameObject>		objects;
 		vector<GameActor>		actors;
-		vector<GameEnviroment>	enviroments;
+		vector<GameEnviroment>	neighbours;
+	public:
+
+		GameEnviroment();
+		~GameEnviroment();
+
+		
+		void addObject(const GameObject & ob);
+		void deleteObject(GameObject & ob);
+		GameObject * removeObject(GameObject & ob);
+		
+
+		void addActor(const GameActor & ob);
+		void deleteActor(GameActor & ob);
+		GameActor * removeActor(GameActor & ob);
+
+		GameEnviroment * getNeighbour(const unsigned int direction);
+
+		void randomlyGenerate();
+
+	
 	};
 
 }
