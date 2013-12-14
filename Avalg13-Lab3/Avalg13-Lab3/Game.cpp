@@ -21,8 +21,8 @@ namespace adventure_game {
 	}
 	function_lookup_table[] =
 	{
-		{ &Game::quitGame, "quit" },
-		{ &Game::listCommands, "list" }
+		{ &Game::quitGame,		"quit" },
+		{ &Game::listCommands,	"list" }
 	};
 
 
