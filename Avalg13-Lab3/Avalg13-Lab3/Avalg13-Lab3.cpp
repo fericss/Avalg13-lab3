@@ -26,6 +26,7 @@ int main(int argc, _TCHAR* argv[])
 		args.clear();
 		for (size_t p = 0, q = 0; p != command.npos; p = q){
 			args.push_back(command.substr(p + (p != 0), (q = command.find(' ', p + 1)) - p - (p != 0)));
+			
 		}
 		if (!g.lookup_and_call(args, &g)){
 			cout << "Unknown command: " << command << endl;

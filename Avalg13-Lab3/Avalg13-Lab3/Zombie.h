@@ -3,15 +3,16 @@
 
 namespace adventure_game {
 
-	class Player :
+	class Zombie :
 		public GameActor
 	{
 	public:
-		Player();
-		~Player();
+		Zombie();
+		~Zombie();
 
 		virtual void action();
 
-	};
-}
 
+	};
+
+}
