@@ -33,7 +33,7 @@ namespace adventure_game {
 	string * GameObject::getType(){
 		return &type;
 	}
-	
+
 	void GameObject::lootAction(Game * g){
 
 	}

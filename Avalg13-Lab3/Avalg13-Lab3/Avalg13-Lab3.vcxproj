@@ -79,6 +79,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Desert.h" />
+    <ClInclude Include="Forest.h" />
     <ClInclude Include="GameEnviroment.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameActor.h" />
@@ -91,6 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Avalg13-Lab3.cpp" />
+    <ClCompile Include="Desert.cpp" />
+    <ClCompile Include="Forest.cpp" />
     <ClCompile Include="GameEnviroment.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameActor.cpp" />

@@ -11,7 +11,7 @@ using std::vector;
 namespace adventure_game {
 	class Game {
 	private:
-		Player player;
+		Player * player;
 	public:
 
 		Player * getPlayer();
@@ -31,7 +31,7 @@ namespace adventure_game {
 
 		bool lookup_and_call(const vector<string> & args, Game * g) const;
 
-	
+		bool quit;
 	};
 }
 

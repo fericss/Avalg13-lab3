@@ -45,6 +45,12 @@
     <ClInclude Include="Key.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Desert.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Forest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -72,6 +78,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Desert.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Forest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

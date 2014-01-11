@@ -2,20 +2,34 @@
 #include "GameEnviroment.h"
 #include "GameActor.h"
 #include "GameObject.h"
-
+#include "Game.h"
+#include "Player.h"
 namespace adventure_game {
 	GameEnviroment::GameEnviroment()
 	{
 		objects = vector<GameObject*>();
 		actors = vector<GameActor*>();
+
+		dir_west = NULL;
+		dir_east = NULL;
+		dir_south = NULL;
+		dir_north = NULL;
+		locked = false;
 	}
-	GameEnviroment::GameEnviroment(string _description, string _type){
-		GameEnviroment();
-		description = _description;
-		type = _type;
+	GameEnviroment::GameEnviroment(string des, string ty){
+		description = des;
+		type = ty;
+		objects = vector<GameObject*>();
+		actors = vector<GameActor*>();
+
+		dir_west = NULL;
+		dir_east = NULL;
+		dir_south = NULL;
+		dir_north = NULL;
+		locked = false;
 	}
 
-	
+
 
 	void GameEnviroment::addObject(GameObject * ob){
 		ob->location = this;
@@ -59,10 +73,10 @@ namespace adventure_game {
 		description = *_s;
 	}
 
-	static const int WEST	= 0;
-	static const int NORTH	= 1;
-	static const int EAST	= 2;
-	static const int SOUTH	= 3;
+	static const unsigned int WEST = 0;
+	static const unsigned int NORTH = 1;
+	static const unsigned int EAST = 2;
+	static const unsigned int SOUTH = 3;
 	GameEnviroment * GameEnviroment::getNeighbour(const unsigned int direction){
 		if (direction == WEST){
 			return dir_west;
@@ -85,7 +99,7 @@ namespace adventure_game {
 			if (g->getNeighbour(EAST) == 0){
 				g->setNeighbour(EAST, this);
 			}
-			
+
 		}
 		else if (direction == EAST){
 			dir_east = g;
@@ -115,6 +129,27 @@ namespace adventure_game {
 		return &type;
 	}
 
+
+	void GameEnviroment::update(Game * g){
+		vector<GameActor*> * actors = this->getActors();
+		for (auto var = actors->begin(); var != actors->end(); ++var){
+			if ((*var)->isDead){
+				continue;
+			}
+			(*var)->action();
+		}
+		removeDeadActors();
+	}
+	void GameEnviroment::removeDeadActors(){
+		vector<GameActor*> * actors = this->getActors();
+		for (auto var = actors->begin(); var != actors->end(); ++var){
+			if ((*var)->isDead){
+				this->deleteActor((*var));
+				removeDeadActors();
+				break;
+			}
+		}
+	}
 
 	GameEnviroment::~GameEnviroment()
 	{

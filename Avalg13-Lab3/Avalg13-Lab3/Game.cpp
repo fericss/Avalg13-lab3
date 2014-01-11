@@ -13,21 +13,21 @@ using std::cout;
 
 namespace adventure_game {
 
-	static const int WEST	= 0;
-	static const int NORTH	= 1;
-	static const int EAST	= 2;
-	static const int SOUTH	= 3;
+	static const int WEST = 0;
+	static const int NORTH = 1;
+	static const int EAST = 2;
+	static const int SOUTH = 3;
 	string game_start_intro =
-		"Bla bla bla, Bloooooo\nTo view a list of commands type: list";
+		"You wake up on a beach after an accident, you must find help.\nTo view a list of commands type: list";
 
 	struct
 	{
-		(void)(Game::*fn)(const vector<string> & args, Game * g);
+		void (Game::*fn)(const vector<string> & args, Game * g);
 		const char* key;
 	}
 	function_lookup_table[] =
 	{
-		{ &Game::quitGame,		"quit" },
+		{ &Game::quitGame, "quit" },
 		{ &Game::go, "go" },
 		{ &Game::look, "look" },
 		{ &Game::attack, "attack" },
@@ -35,15 +35,17 @@ namespace adventure_game {
 		{ &Game::drop, "drop" },
 		{ &Game::inventory, "inventory" },
 		{ &Game::use, "use" },
-		{ &Game::listCommands,	"list" }
+		{ &Game::listCommands, "list" }
 	};
 
 
 	Game::Game(){
 		cout << game_start_intro << endl;
-		player = Player();
+		player = new Player();
+		quit = false;
 	}
 	Game::~Game(){
+		delete player;
 	}
 
 	void Game::loot(const vector<string> & args, Game * g){
@@ -51,21 +53,21 @@ namespace adventure_game {
 			cout << "Loot what?" << endl;
 			return;
 		}
-		GameEnviroment * env = g->player.location;
-		if (g->player.inventory_size == g->player.inventory_count){
+		GameEnviroment * env = g->player->location;
+		if (g->player->inventory_size == g->player->inventory_count){
 			cout << "Inventory is full." << endl;
 			return;
 		}
 		for (unsigned int i = 0; i < env->getObjects()->size(); i++){
 			if (args[1] == *env->getObjects()->at(i)->getName()){
-				g->player.inventory[g->player.inventory_count] = env->getObjects()->at(i);
-				g->player.inventory_count++;
+				g->player->inventory[g->player->inventory_count] = env->getObjects()->at(i);
+				g->player->inventory_count++;
 				env->getObjects()->at(i)->lootAction(g);
 				env->deleteObject(env->getObjects()->at(i));
 				return;
 			}
 		}
-		cout << "Can't find "<< args[1] << endl;
+		cout << "Can't find " << args[1] << endl;
 	}
 
 	void Game::drop(const vector<string> & args, Game * g){
@@ -73,30 +75,30 @@ namespace adventure_game {
 			cout << "Drop what?" << endl;
 			return;
 		}
-		GameEnviroment * env = g->player.location;
+		GameEnviroment * env = g->player->location;
 
-		for (unsigned int i = 0; i < g->player.inventory_count; i++){
-			if (args[1] == *g->player.inventory[i]->getName()){
+		for ( int i = 0; i < g->player->inventory_count; i++){
+			if (args[1] == *g->player->inventory[i]->getName()){
 
 
-				env->getObjects()->push_back(g->player.inventory[i]);
-				g->player.inventory_count--;
+				env->getObjects()->push_back(g->player->inventory[i]);
+				g->player->inventory_count--;
 
 			}
 		}
 	}
 
 	void Game::inventory(const vector<string> & args, Game * g){
-		cout << g->player.inventory_count << " out of " << g->player.inventory_size<< " items." << endl;
-		for (unsigned int i = 0; i < g->player.inventory_count; i++){
-			cout << *g->player.inventory[i]->getName() << endl;
+		cout << g->player->inventory_count << " out of " << g->player->inventory_size << " items." << endl;
+		for ( int i = 0; i < g->player->inventory_count; i++){
+			cout << *g->player->inventory[i]->getName() << endl;
 		}
 	}
 	void Game::use(const vector<string> & args, Game * g){
-		for (unsigned int i = 0; i < g->player.inventory_count; i++){
-			if (*g->player.inventory[i]->getName() == args[1]){
+		for ( int i = 0; i < g->player->inventory_count; i++){
+			if (*g->player->inventory[i]->getName() == args[1]){
 				cout << "You use " << args[1] << endl;
-				g->player.inventory[i]->useObject(g);
+				g->player->inventory[i]->useObject(g);
 				return;
 			}
 		}
@@ -104,7 +106,7 @@ namespace adventure_game {
 
 	}
 	void Game::listCommands(const vector<string> & args, Game * g){
-		for each (auto var in function_lookup_table)
+		for (auto &var : function_lookup_table)
 		{
 			cout << var.key << endl;
 		}
@@ -114,34 +116,34 @@ namespace adventure_game {
 			cout << "Attack what?" << endl;
 			return;
 		}
-		vector<GameActor*> actors = *g->player.location->getActors();
+		vector<GameActor*> actors = *g->player->location->getActors();
 		for (unsigned i = 0; i < actors.size(); i++){
-			if (actors[i]->name==args[1]){
-				actors[i]->dealDamage(&g->player, g->player.damage);
+			if (actors[i]->name == args[1]){
+				actors[i]->dealDamage(g->player, g->player->damage);
 				return;
 			}
 		}
 		cout << "No target named: " << args[1] << endl;
 	}
 	void Game::look(const vector<string> & args, Game * g){
-		GameEnviroment * env = g->player.location;
+		GameEnviroment * env = g->player->location;
 		cout << "You are " << *env->getDescription() << endl;
 
-		if (env->getNeighbour(WEST)!=0){
+		if (env->getNeighbour(WEST) != NULL){
 			cout << "To the west you can see a " << *env->getNeighbour(WEST)->getType() << endl;
 		}
-		if (env->getNeighbour(EAST) != 0){
+		if (env->getNeighbour(EAST) != NULL){
 			cout << "To the east you can see a " << *env->getNeighbour(EAST)->getType() << endl;
 		}
-		if (env->getNeighbour(NORTH) != 0){
+		if (env->getNeighbour(NORTH) != NULL){
 			cout << "To the north you can see a " << *env->getNeighbour(NORTH)->getType() << endl;
 		}
-		if (env->getNeighbour(SOUTH) != 0){
+		if (env->getNeighbour(SOUTH) != NULL){
 			cout << "To the south you can see a " << *env->getNeighbour(SOUTH)->getType() << endl;
 		}
 		for (unsigned int i = 0; i < env->getActors()->size(); i++){
 			if (env->getActors()->at(i)->name != "Player")
-			cout << "You see a " << env->getActors()->at(i)->name << endl;
+				cout << "You see a " << env->getActors()->at(i)->name << endl;
 
 		}
 		for (unsigned int i = 0; i < env->getObjects()->size(); i++){
@@ -173,37 +175,34 @@ namespace adventure_game {
 			return;
 		}
 
-		cout << "Walking towards "<< args[1] << endl;
-		if (player.move(direction)){
+		cout << "Walking towards " << args[1] << endl;
+		if (player->move(direction)){
 			look(args, g);
 		}
 		else{
 			cout << "You were unable to go " << args[1] << endl;
 		}
 
-		
+
 	}
 	void Game::quitGame(const vector<string> & args, Game * g){
-		exit(0);
+		g->quit = true;
 	}
 
 
 	bool Game::lookup_and_call(const vector<string> & args, Game * g) const{
-		for each (auto var in function_lookup_table)
+		for (auto &var : function_lookup_table)
 		{
 			if (args[0] == var.key)
 			{
+				g->player->location->update(g);
 				(g->*(var.fn))(args, g);
-				vector<GameActor*> * actors = g->player.location->getActors();
-				for (auto var = actors->begin(); var != actors->end();++var){
-					(*var)->action();
-				}
 				return true;
 			}
 		}
 		return false;
 	}
 	Player * Game::getPlayer(){
-		return &player;
+		return player;
 	}
 }

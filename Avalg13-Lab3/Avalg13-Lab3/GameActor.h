@@ -17,21 +17,24 @@ namespace adventure_game {
 		GameEnviroment * location;
 
 		void dealDamage(GameActor * actor, int d);
+		void dealDamage(int d);
 		void kill();
 		void giveItem(GameObject * obj);
 
 
 		std::string name;
 		std::string description;
-		int health = 1;
-		int damage = 0;
+		int health;
+		int damage;
 
 		GameObject ** inventory;
-		int inventory_size = 0;
-		int inventory_count = 0;
+		int inventory_size;
+		int inventory_count;
+
+		bool isDead;
 
 	private:
-		
+
 
 	};
 }

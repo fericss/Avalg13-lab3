@@ -5,19 +5,13 @@
 
 namespace adventure_game {
 
-	Zombie::Zombie()
+	Zombie::Zombie() : GameActor()
 	{
 		name = "Zombie";
 		description = "Reanimated corpse";
 
 		health = 15;
 		damage = 2;
-
-		/*
-		inventory_size = 1;
-		inventory_count++;
-		inventory = new GameObject*[inventory_size];
-		inventory[0] = new Key("Bone_key", "Key", "This looks nasty");*/
 	}
 
 
@@ -26,6 +20,13 @@ namespace adventure_game {
 	}
 
 	void Zombie::action(){
+		if (health < 10){
+			damage = 10;
+		}
+		else{
+			damage = 2;
+		}
+
 		vector<GameActor*> actors = *location->getActors();
 		for (unsigned int i = 0; i < actors.size(); i++){
 			if (actors[i] != this){

@@ -8,12 +8,19 @@ namespace adventure_game {
 
 	GameActor::GameActor()
 	{
+		this->health = 1;
+		this->damage = 0;
 
+		this->inventory_size = 0;
+		this->inventory_count = 0;
+
+		this->isDead = false;
 	}
 
 
 	GameActor::~GameActor()
 	{
+		delete inventory;
 	}
 
 	void GameActor::action(){
@@ -29,12 +36,19 @@ namespace adventure_game {
 			this->kill();
 		}
 	}
+	void GameActor::dealDamage(int d){
+		health -= d;
+		std::cout << name << " has " << this->health << " health left." << std::endl;
+		if (health < 0){
+			std::cout << this->name << " dies." << std::endl;
+			this->kill();
+		}
+	}
 	void GameActor::kill(){
 		if (name == "Player"){
 			std::cout << "Game is over." << std::endl;
 			std::cout << "Press any key to exit ..." << std::endl;
 			std::cin.ignore();
-			exit(0);
 		}
 		if (inventory_size > 0){
 			std::cout << "Items fall to the ground." << std::endl;
@@ -42,8 +56,7 @@ namespace adventure_game {
 				this->location->addObject(this->inventory[i]);
 			}
 		}
-		location->deleteActor(this);
-		delete this;
+		isDead = true;
 	}
 
 	void GameActor::giveItem(GameObject * obj){
@@ -51,7 +64,7 @@ namespace adventure_game {
 		inventory_count++;
 		GameObject ** inv = new GameObject*[inventory_size];
 		inv[inventory_count - 1] = obj;
-		for (unsigned int i = 0; i < inventory_size - 1; i++){
+		for ( int i = 0; i < inventory_size - 1; i++){
 			inv[i] = inventory[i];
 		}
 		delete inventory;
@@ -61,14 +74,14 @@ namespace adventure_game {
 
 	bool GameActor::move(const int direction){
 		if (direction >= 0 && direction <= 4){
-			if (location->getNeighbour(direction)!=0){
+			if (location->getNeighbour(direction) != NULL){
 
 				if (location->getNeighbour(direction)->locked){
 					std::cout << "You encounter a locked door." << std::endl;
 					return false;
 				}
 				location->deleteActor(this);
-				location = location->getNeighbour(direction);	
+				location = location->getNeighbour(direction);
 				location->addActor(this);
 
 				return true;

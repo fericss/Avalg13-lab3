@@ -6,21 +6,24 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Player.h"
 
 
-using adventure_game::Game;
 using std::cout;
 using std::cin;
 using std::endl;
 
 
-int main(int argc, _TCHAR* argv[])
+int main(int argc, char* argv[])
 {
-	Game g = Game();
+	adventure_game::Game g = adventure_game::Game();
 	string command;
 
 	vector<string> args = vector<string>();
 	while (true){
+		if (g.quit || g.getPlayer()->isDead){
+			break;
+		}
 		cout << ">>";
 		getline(cin, command);
 		args.clear();
@@ -31,6 +34,7 @@ int main(int argc, _TCHAR* argv[])
 		if (!g.lookup_and_call(args, &g)){
 			cout << "Unknown command: " << command << endl;
 		}
+		
 
 	}
 

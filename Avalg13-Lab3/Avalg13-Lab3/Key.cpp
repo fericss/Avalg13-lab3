@@ -25,7 +25,7 @@ namespace adventure_game {
 		}
 		return false;
 	}
-	
+
 	void Key::lootAction(Game * _g){
 
 	}
@@ -39,7 +39,7 @@ namespace adventure_game {
 				std::cout << "You unlock " << *env->getType() << std::endl;
 			}
 		}
-		
+
 	}
 
 	Key::~Key()

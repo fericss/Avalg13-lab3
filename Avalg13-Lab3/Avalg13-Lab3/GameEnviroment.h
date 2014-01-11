@@ -13,23 +13,23 @@ namespace adventure_game {
 	{
 	private:
 		string					type;
-		string					description;
+		string				    	description;
 		vector<GameObject *>	objects;
 		vector<GameActor *>		actors;
-		
-		GameEnviroment * dir_west = 0;
-		GameEnviroment * dir_east = 0;
-		GameEnviroment * dir_south = 0;
-		GameEnviroment * dir_north = 0;
+
+		GameEnviroment * dir_west;
+		GameEnviroment * dir_east;
+		GameEnviroment * dir_south;
+		GameEnviroment * dir_north;
 	public:
-		bool locked = false;
+		bool locked;
 
 
 		GameEnviroment();
 		GameEnviroment(string description, string type);
 		~GameEnviroment();
 
-		
+
 		void addObject(GameObject * ob);
 		void deleteObject(GameObject * ob);
 		vector<GameObject*> * getObjects();
@@ -47,8 +47,11 @@ namespace adventure_game {
 		void setType(string *);
 		string * getType();
 
+		virtual void update(Game * g);
+		void removeDeadActors();
 
-	
+
+
 	};
 
 }
